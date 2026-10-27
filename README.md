@@ -1,5 +1,7 @@
 # 鸣潮启动器（Wuwa Launcher）
 
+> **本项目全程由 DeepSeek V4.1 Flash 制作。**
+
 给《鸣潮》Android 端调渲染分辨率与屏幕方向的辅助工具。**免 Root**，通过 Shizuku 获取 shell 身份。
 
 包名 `com.miaojian.wuwalauncher` · 最低 Android 7.0（API 24）· 纯 Java，无第三方 UI 框架
