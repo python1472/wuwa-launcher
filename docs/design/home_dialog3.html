@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#0E0E12; --text:#F0EEEA; --dim:#8A8A93; --faint:#5f5f69;
+    --accent:#C24A34; --green:#4ADE80; --amber:#E8C46A; --line:#2b2b34;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#131318; font-family:"Noto Sans CJK SC","PingFang SC",sans-serif;
+    display:flex; gap:40px; justify-content:center; align-items:flex-start;
+    padding:40px 20px;
+  }
+  .wrap{display:flex;flex-direction:column;align-items:center}
+  .phone{
+    width:356px;height:752px;background:var(--bg);
+    border-radius:30px;border:1px solid #2a2a31;overflow:hidden;
+    position:relative;
+  }
+  .caption{color:#6b6b75;font-size:12px;margin-top:12px;letter-spacing:.4px}
+
+  .desk{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 28% 20%, rgba(122,90,180,.30), transparent 46%),
+      radial-gradient(circle at 74% 64%, rgba(58,122,160,.24), transparent 50%),
+      linear-gradient(160deg,#1a1526,#0d1219 62%,#141018);
+    padding:58px 26px;
+  }
+  .drow{display:flex;gap:26px;margin-bottom:26px}
+  .app{width:52px;text-align:center}
+  .app .ic{
+    width:52px;height:52px;border-radius:15px;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.09);
+  }
+  .app .nm{height:6px;width:34px;margin:8px auto 0;border-radius:3px;background:rgba(255,255,255,.13)}
+
+  .dim{position:absolute;inset:0;background:rgba(8,8,12,.66)}
+
+  .dlg{
+    position:absolute;left:16px;right:16px;top:50%;transform:translateY(-50%);
+    background:#1b1b22;border:1px solid #2f2f39;border-radius:20px;
+    padding:22px 19px 17px;
+    box-shadow:0 20px 52px rgba(0,0,0,.6);
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:10.5px;color:#9FE8B0;background:rgba(74,222,128,.10);
+    border:1px solid rgba(74,222,128,.22);border-radius:6px;
+    padding:3px 8px;margin-bottom:12px;
+  }
+  .badge i{width:5px;height:5px;border-radius:50%;background:var(--green)}
+  .dlg h3{color:var(--text);font-size:16px;font-weight:700;margin-bottom:9px}
+  .dlg p{color:#8f8f99;font-size:12px;line-height:1.7}
+
+  .kv{
+    margin-top:13px;padding:11px 13px;background:#15151b;border:1px solid #262630;
+    border-radius:10px;display:flex;justify-content:space-between;align-items:center;
+  }
+  .kv .k{color:#6f6f7a;font-size:11.5px}
+  .kv .v{color:var(--amber);font-size:12.5px;font-weight:700}
+
+  /* 三个按钮 */
+  .acts{display:flex;flex-direction:column;gap:8px;margin-top:15px}
+  .btn{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:13px 15px;border-radius:12px;font-size:13.5px;
+  }
+  .btn .lbl{display:flex;align-items:center;gap:9px;font-weight:600}
+  .btn .ic{
+    width:19px;height:19px;flex:0 0 auto;display:block;
+  }
+  .btn .ic svg{width:19px;height:19px;display:block}
+
+  /* 三个按钮统一红色，深浅区分层级 */
+  .btn.p1{background:#C24A34;color:#fff}
+  .btn.p2{background:#B9492F;color:#FEF0EC}
+  .btn.p3{background:#B04630;color:#FBE8E3}
+  .btn .ic{color:currentColor;opacity:.92}
+  .cnt{
+    font-size:12px;font-weight:700;
+    color:rgba(255,255,255,.82);
+  }
+
+  .note{
+    color:#5f5f69;font-size:10.5px;margin-top:12px;line-height:1.65;
+    padding-top:11px;border-top:1px solid #26262e;
+  }
+  .note b{color:#8a8a94;font-weight:600}
+
+  /* 第三屏：保持并回到游戏后的桌面残留提示 */
+  .toast{
+    position:absolute;left:22px;right:22px;bottom:52px;
+    background:rgba(26,26,33,.97);border:1px solid #3a3527;
+    border-radius:14px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start;
+  }
+  .toast .dot{
+    width:19px;height:19px;flex:0 0 auto;
+    background:none;color:var(--amber);
+  }
+  .toast .dot svg{width:19px;height:19px;display:block}
+  .toast .tx{font-size:11.5px;color:#b0b0ba;line-height:1.65}
+  .toast .tx b{color:var(--amber)}
+</style>
+</head>
+<body>
+
+<!-- ① 三选项弹窗 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="desk">
+      <div class="drow">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+      <div class="drow">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+    </div>
+    <div class="dim"></div>
+
+    <div class="dlg">
+      <div class="badge"><i></i>鸣潮已转入后台</div>
+      <h3>要还原分辨率吗？</h3>
+      <p>游戏仍在后台运行，不会被关闭。</p>
+
+      <div class="kv">
+        <span class="k">当前渲染分辨率</span>
+        <span class="v">3840 × 8400 · 3.0×</span>
+      </div>
+
+      <div class="acts">
+        <div class="btn p1">
+          <div class="lbl"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.2v4.6h4.6"/></svg></span><div>还原并回到桌面<span class="cnt">（10）</span></div></div>
+        </div>
+        <div class="btn p2">
+          <div class="lbl"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 5.2a1 1 0 0 1 1.53-.85l8.2 5.2a1.4 1.4 0 0 1 0 2.36l-8.2 5.2A1 1 0 0 1 9 16.26z"/></svg></span><div>保持并回到游戏</div></div>
+        </div>
+        <div class="btn p3">
+          <div class="lbl"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 10.6 12 3.4l8.8 7.2"/><path d="M5.6 9.4V20h12.8V9.4"/></svg></span><div>保持并回到桌面</div></div>
+        </div>
+      </div>
+
+      <div class="note">
+        10 秒后默认执行<b>第一项</b>。鸣潮不会被关闭，需你自己从后台移除。
+      </div>
+    </div>
+  </div>
+  <div class="caption">① 三选项 · 倒计时默认走第一项</div>
+</div>
+
+<!-- ② 选「保持并回到游戏」后 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="desk">
+      <div class="drow">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+    </div>
+    <div class="dim"></div>
+
+    <div class="dlg" style="top:46%">
+      <div class="badge" style="color:#E8C46A;background:rgba(232,196,106,.1);border-color:rgba(232,196,106,.24)">
+        <i style="background:#E8C46A"></i>即将切回游戏
+      </div>
+      <h3>保持 3.0× 分辨率</h3>
+      <p>正在返回鸣潮，分辨率保持不变。</p>
+
+      <div class="kv" style="margin-top:14px">
+        <span class="k">桌面在此分辨率下会显示较小</span>
+        <span class="v">3840 × 8400</span>
+      </div>
+    </div>
+  </div>
+  <div class="caption">② 保持并回到游戏 → 直接切回</div>
+</div>
+
+<!-- ③ 保持并回到桌面 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="desk">
+      <div class="drow">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+      <div class="drow">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+    </div>
+
+    <div class="toast">
+      <div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 10.6 12 3.4l8.8 7.2"/><path d="M5.6 9.4V20h12.8V9.4"/></svg></div>
+      <div class="tx">
+        分辨率保持 <b>3840 × 8400</b><br>
+        鸣潮仍在后台 · 桌面会显得较小
+      </div>
+    </div>
+  </div>
+  <div class="caption">③ 保持并回到桌面 → 常驻提示，可再点还原</div>
+</div>
+
+</body>
+</html>

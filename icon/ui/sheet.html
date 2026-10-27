@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#141419;padding:40px;font-family:sans-serif}
+.row{display:flex;gap:34px;align-items:center;margin-bottom:30px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:8px;color:#E0492C}
+.cell svg{width:64px;height:64px}
+.cell .n{color:#6b6b75;font-size:11px}
+.small svg{width:24px;height:24px}
+</style></head><body>
+<div class="row" id="big"></div>
+<div class="row small" id="sml"></div>
+<script>
+const names=['native','hd','boost','settings','restore','launch','capsule','refresh'];
+Promise.all(names.map(n=>fetch('out_'+n+'.svg').then(r=>r.text()))).then(list=>{
+  list.forEach((svg,i)=>{
+    for(const [id,cls] of [['big',''],['sml','']]){
+      const d=document.createElement('div'); d.className='cell';
+      d.innerHTML=svg;
+      if(id==='sml'){ d.querySelector('svg').style.width='24px'; d.querySelector('svg').style.height='24px'; }
+      const lab=document.createElement('div'); lab.className='n'; lab.textContent=names[i];
+      d.appendChild(lab);
+      document.getElementById(id).appendChild(d);
+    }
+  });
+});
+</script></body></html>

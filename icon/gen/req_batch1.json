@@ -1,0 +1,13 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是 Android 矢量图标设计师。只输出 SVG 代码，用 <svg> 包裹，不要任何解释、不要 markdown 代码块标记。"
+    },
+    {
+      "role": "user",
+      "content": "设计 3 个线性风格 SVG 图标，风格必须统一。\n\n规则：viewBox=\"0 0 24 24\"，stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"，每个图标 2-4 个元素以内。\n\n1. 原生 —— 表示「不做改动、保持默认」。用「一块方正的实心小方块」或「一个不加修饰的矩形轮廓」表达原始、未经处理。\n2. 高清 —— 表示「贴合屏幕物理分辨率」。用「手机轮廓填满内部、四角不留白」表达满屏。\n3. 极限 —— 表示「放大、超出上限」。用「一个方框 + 向外的双向箭头」表达放大。\n\n输出格式：每个图标一行，就写 <svg>...</svg>，三个之间用空行分隔。不要编号，不要说明。"
+    }
+  ],
+  "max_tokens": 2000
+}

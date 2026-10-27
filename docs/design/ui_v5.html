@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>鸣潮启动器 · 渲染档测试</title>
+<style>
+  :root{
+    --accent:#C24A34; --accent-soft:rgba(194,74,52,.14);
+    --bg:#0E0E12; --card:#17171d; --line:#24242c;
+    --text:#F0EEEA; --dim:#8A8A93; --faint:#63636d;
+    --green:#4ADE80; --amber:#E8C46A; --red:#E06A5A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#131318; font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;
+    display:flex; flex-direction:column; gap:26px; align-items:center;
+    padding:28px 10px;
+  }
+  .wrap{display:flex;flex-direction:column;align-items:center}
+  .phone{
+    width:344px;height:730px;background:var(--bg);
+    border-radius:30px;border:1px solid #2a2a31;overflow:hidden;
+    display:flex;flex-direction:column;position:relative;
+  }
+  .caption{color:#6b6b75;font-size:12px;margin-top:11px;letter-spacing:.4px}
+
+  .bar{padding:24px 20px 14px;display:flex;align-items:center;justify-content:space-between}
+  .title{color:var(--text);font-size:20px;font-weight:600}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .dot.warn{background:var(--amber)}
+
+  .status{
+    margin:0 20px 18px;padding:10px 13px;background:var(--card);
+    border:1px solid var(--line);border-radius:11px;display:flex;align-items:center;gap:8px;
+  }
+  .status .t{font-size:12px;color:#9FE8B0}
+
+  .section-title{margin:0 20px 10px;font-size:12px;color:var(--faint);letter-spacing:.6px}
+  .options{margin:0 20px 16px;display:flex;flex-direction:column;gap:9px}
+  .opt{
+    padding:13px 15px;border-radius:13px;background:var(--card);
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;
+  }
+  .opt .l{color:#D9D7D2;font-size:14.5px;font-weight:500}
+  .opt .d{color:var(--faint);font-size:11.5px;margin-top:3px}
+  .opt .r{color:var(--faint);font-size:11px}
+  .opt.on{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.on .l{color:#fff}
+  .opt.on .r{color:var(--accent)}
+
+  /* 展开的测试档 */
+  .tiers{
+    margin:-8px 20px 16px;padding:12px;background:#13131a;
+    border:1px solid #26262e;border-radius:12px;display:flex;flex-direction:column;gap:8px;
+  }
+  .tiers .tip{font-size:10.5px;color:var(--faint);line-height:1.6;margin-bottom:2px}
+  .tier{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 12px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .tier .tl{color:#D9D7D2;font-size:13px;font-weight:600}
+  .tier .td{color:var(--faint);font-size:10.5px;margin-top:2px}
+  .tier .tag{
+    font-size:10px;padding:3px 8px;border-radius:6px;
+  }
+  .tag.ok{color:#9FE8B0;background:rgba(74,222,128,.1)}
+  .tag.mid{color:var(--amber);background:rgba(232,196,106,.1)}
+  .tag.bad{color:var(--red);background:rgba(224,106,90,.1)}
+
+  .launch{margin:0 20px;padding:20px;border-radius:16px;text-align:center;font-size:16.5px;font-weight:600}
+  .launch.disabled{background:#1b1b21;color:#4a4a54;border:1px solid #24242c}
+  .launch.enabled{background:var(--accent);color:#fff}
+  .launch .hint{font-size:11px;font-weight:400;color:#4a4a54;margin-top:6px}
+
+  .log{
+    flex:1;margin:14px 20px 0;padding:11px;background:#101015;
+    border:1px solid #1e1e26;border-radius:11px;
+    font-family:ui-monospace,"SF Mono",monospace;font-size:10px;line-height:1.8;
+    color:#6f8f79;overflow:hidden;
+  }
+  .log .ok{color:#9FE8B0}
+  .log .dim{color:#46554c}
+  .log .warn{color:var(--amber)}
+
+  .foot{padding:12px 20px 20px}
+  .btn-sm{text-align:center;padding:12px;border-radius:12px;font-size:12.5px;
+    color:#8A8A93;background:var(--card);border:1px solid var(--line)}
+
+  /* 测试倒计时遮罩 */
+  .testing{
+    position:absolute;inset:0;z-index:5;background:rgba(10,10,14,.9);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  }
+  .ring{
+    width:112px;height:112px;border-radius:50%;
+    border:3px solid rgba(194,74,52,.22);border-top-color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:34px;font-weight:300;color:var(--text);
+  }
+  .testing .h{color:var(--text);font-size:14.5px;font-weight:600}
+  .testing .p{color:var(--faint);font-size:11.5px;line-height:1.7;text-align:center;padding:0 40px}
+  .testing .px{color:var(--amber);font-size:11.5px;margin-top:-6px}
+
+  /* 提前结束按钮 */
+  .early{
+    margin-top:6px;padding:11px 26px;border-radius:12px;
+    background:rgba(194,74,52,.16);border:1px solid rgba(194,74,52,.5);
+    color:#E8A090;font-size:13px;font-weight:600;
+  }
+
+  /* 滑动轨迹层 */
+  /* 滑动轨迹：长度比屏宽短一点 */
+  .tr{
+    position:absolute; height:5px; border-radius:3px; pointer-events:none;
+  }
+  .tr.t1{
+    width:250px; left:47px; top:132px; transform:rotate(-6deg);
+    background:linear-gradient(90deg, rgba(74,222,128,0), rgba(74,222,128,.95) 55%, rgba(159,232,176,1));
+  }
+  .tr.t2{
+    width:236px; left:54px; top:566px; transform:rotate(4deg);
+    background:linear-gradient(90deg, rgba(106,166,232,1), rgba(106,166,232,.5) 55%, rgba(106,166,232,0));
+  }
+  .tr.t3{
+    width:228px; left:58px; top:636px; transform:rotate(-3deg);
+    background:linear-gradient(90deg, rgba(232,196,106,0), rgba(232,196,106,.2) 0%, rgba(232,196,106,.85) 55%, rgba(245,222,160,1));
+  }
+  .tq{position:absolute;border-radius:50%;pointer-events:none}
+  .tq.q1{width:9px;height:9px;left:288px;top:126px;background:#9FE8B0;opacity:.9;box-shadow:0 0 8px rgba(159,232,176,.7)}
+  .tq.q2{width:8px;height:8px;left:52px;top:568px;background:#9CC8F5;opacity:.85;box-shadow:0 0 8px rgba(156,200,245,.6)}
+  .tq.q3{width:8px;height:8px;left:280px;top:630px;background:#F5DEA0;opacity:.8;box-shadow:0 0 8px rgba(245,222,160,.55)}
+  .testing > .ring, .testing > .h, .testing > .px, .testing > .p, .testing > .early{
+    position:relative; z-index:1;
+  }
+</style>
+</head>
+<body>
+
+<!-- ① 最大渲染极限 展开 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">最大渲染极限</div><div class="d">按屏幕自动计算</div></div><div class="r">展开中</div></div>
+    </div>
+
+    <div class="tiers">
+      <div class="tip">点击任一档位试跑 5 秒，检测该分辨率下屏幕能否正常触摸</div>
+
+      <div class="tier">
+        <div><div class="tl">1.4×</div><div class="td">1792 × 3920 · 784dpi</div></div>
+        <div class="tag ok">稳妥</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">1.6×</div><div class="td">2048 × 4480 · 896dpi</div></div>
+        <div class="tag mid">有风险</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">1.8×</div><div class="td">2304 × 5040 · 1008dpi</div></div>
+        <div class="tag mid">风险高</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">2.0×</div><div class="td">2560 × 5600 · 1120dpi</div></div>
+        <div class="tag bad">极易崩溃</div>
+      </div>
+    </div>
+
+    <div class="launch disabled">启动游戏<div class="hint">请先完成测试并选定</div></div>
+    <div class="log"><div class="dim">等待选择…</div></div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+  </div>
+  <div class="caption">① 展开「最大渲染极限」→ 四档测试</div>
+</div>
+
+<!-- ② 测试中 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">最大渲染极限</div><div class="d">按屏幕自动计算</div></div><div class="r">测试中</div></div>
+    </div>
+
+    <div class="launch disabled">启动游戏<div class="hint">正在测试</div></div>
+    <div class="log">
+      <div class="ok">> wm size 2048x4480</div>
+      <div class="ok">> wm density 896</div>
+      <div class="warn">倒计时 10 秒后自动还原…</div>
+    </div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+
+    <div class="testing">      <div class="ring">8</div>
+
+      <div class="tr t1"></div>
+      <div class="tr t2"></div>
+      <div class="tr t3"></div>
+      <div class="tq q1"></div>
+      <div class="tq q2"></div>
+      <div class="tq q3"></div>
+      <div class="h">正在测试触摸</div>
+      <div class="px">2048 × 4480 · 1.6×</div>
+      <div class="p">滑动屏幕，看轨迹是否跟手<br>10 秒后自动恢复原样</div>
+      <div class="early">确认无误</div>
+    </div>
+
+  </div>
+  <div class="caption">② 测试中 → 全屏倒计时，可试触摸</div>
+</div>
+
+<!-- ③ 测试完成 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">最大渲染极限</div><div class="d">1792 × 3920 · 1.4×</div></div><div class="r">已选</div></div>
+    </div>
+
+    <div class="tiers">
+      <div class="tip">1.4× 测试通过，已自动选定</div>
+
+      <div class="tier" style="border-color:#3a5a45;background:rgba(74,222,128,.06)">
+        <div><div class="tl">1.4× <span style="color:#4ADE80;font-size:10.5px">✓ 可用</span></div><div class="td">1792 × 3920 · 784dpi</div></div>
+        <div class="tag ok">稳妥</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">1.6×</div><div class="td">2048 × 4480 · 896dpi</div></div>
+        <div class="tag mid">有风险</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">1.8×</div><div class="td">2304 × 5040 · 1008dpi</div></div>
+        <div class="tag mid">风险高</div>
+      </div>
+      <div class="tier">
+        <div><div class="tl">2.0×</div><div class="td">2560 × 5600 · 1120dpi</div></div>
+        <div class="tag bad">极易崩溃</div>
+      </div>
+    </div>
+
+    <div class="launch enabled">启动游戏</div>
+    <div class="log">
+      <div class="ok">测试通过 1792×3920</div>
+      <div class="dim">屏幕已还原</div>
+      <div class="dim">已选定 1.4× 档</div>
+    </div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+  </div>
+  <div class="caption">③ 测试通过 → 自动选定，启动可用</div>
+</div>
+
+<!-- ④ 点「确认无误」的二次确认 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">最大渲染极限</div><div class="d">按屏幕自动计算</div></div><div class="r">测试中</div></div>
+    </div>
+
+    <div class="launch disabled">启动游戏<div class="hint">正在测试</div></div>
+    <div class="log">
+      <div class="ok">> wm size 2048x4480</div>
+      <div class="ok">> wm density 896</div>
+      <div class="warn">倒计时 10 秒后自动还原…</div>
+    </div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+
+    <div class="testing">
+      <div class="ring">8</div>
+      <div class="h">正在测试触摸</div>
+      <div class="px">2048 × 4480 · 1.6×</div>
+      <div class="p">滑动屏幕，看轨迹是否跟手<br>10 秒后自动恢复原样</div>
+      <div class="early">确认无误</div>
+    </div>
+
+    <div class="mask">
+      <div class="dialog">
+        <h3>确认 1.6× 触摸正常？</h3>
+        <p>确认后将提前结束测试，并以 <b style="color:#E8C46A">2048 × 4480（896dpi）</b> 作为启动分辨率。</p>
+
+        <div class="warnbox">
+          <div class="ic">⚠</div>
+          <div class="tx">
+            该档位属于<b>有风险</b>区间，进入大场景时可能因内存不足闪退。<br>
+            若游戏内出现异常，可随时点「还原显示」恢复。
+          </div>
+        </div>
+
+        <div class="acts">
+          <div class="cancel">继续测满 10 秒</div>
+          <div class="retry">确认无误</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="caption">④ 点「确认无误」→ 再确认一次才提前结束</div>
+</div>
+
+
+<script>
+(function(){
+  var h = (location.hash||'').replace('#','');
+  if (!h || h === 'all') return;
+  var ws = document.getElementsByClassName('wrap');
+  for (var i=0;i<ws.length;i++){
+    if (String(i+1) !== h) ws[i].style.display = 'none';
+  }
+  document.body.style.padding = '20px';
+})();
+</script>
+</body>
+</html>

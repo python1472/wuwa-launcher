@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --accent:#C24A34; --bg:#131318; --card:#1a1a21; --line:#2b2b34;
+    --text:#F0EEEA; --dim:#8A8A93; --faint:#63636d;
+    --green:#4ADE80; --amber:#E8C46A; --red:#E06A5A; --blue:#6AA6E8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;
+    padding:34px 40px 44px; color:var(--text);
+  }
+  h1{font-size:19px;font-weight:600;margin-bottom:6px}
+  .sub{color:var(--faint);font-size:12px;margin-bottom:26px;letter-spacing:.3px}
+
+  .flow{display:flex;flex-direction:column;gap:0;max-width:1000px}
+  .row{display:flex;align-items:stretch;gap:0}
+  .spine{width:300px;display:flex;flex-direction:column;align-items:center}
+  .side{flex:1;padding-left:12px;display:flex;align-items:center}
+
+  .box{
+    width:100%; background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px;
+  }
+  .box .n{
+    display:inline-block; font-size:10px; color:var(--faint);
+    border:1px solid var(--line); border-radius:5px; padding:1px 6px; margin-right:6px;
+  }
+  .box .h{font-size:13.5px;font-weight:600;color:#E8E6E2;display:flex;align-items:center}
+  .box .d{font-size:11.5px;color:var(--faint);margin-top:5px;line-height:1.6}
+  .box.accent{border-color:var(--accent);background:rgba(194,74,52,.12)}
+  .box.accent .h{color:#fff}
+  .box.start{border-color:#3a3a46;background:#1d1d25}
+  .box.end{border-color:#2f5a3f;background:rgba(74,222,128,.08)}
+
+  .arrow{width:2px;height:22px;background:#33333d;position:relative}
+  .arrow::after{
+    content:"";position:absolute;bottom:-1px;left:-4px;
+    border-left:5px solid transparent;border-right:5px solid transparent;
+    border-top:7px solid #33333d;
+  }
+
+  .branch{
+    display:flex;align-items:center;gap:8px;
+    background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:9px 12px;font-size:11.5px;
+    color:var(--dim);line-height:1.5;
+  }
+  .branch .dot2{width:6px;height:6px;border-radius:50%;flex:0 0 auto}
+  .g{background:var(--green)} .a{background:var(--amber)} .r{background:var(--red)} .b{background:var(--blue)}
+  .branch.crit{border-color:#4a2f2a;background:rgba(224,106,90,.08)}
+  .conn{width:26px;height:2px;background:#33333d;position:relative;flex:0 0 auto}
+  .conn::after{content:"";position:absolute;right:-1px;top:-4px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #33333d}
+  .sub2{color:var(--faint);font-size:10.5px;margin-top:3px}
+
+  .legend{margin-top:30px;display:flex;gap:22px;flex-wrap:wrap;font-size:11.5px;color:var(--faint)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+
+<h1>鸣潮启动器 · 完整逻辑</h1>
+<div class="sub">白色为必经步骤 · 右侧为分支结果</div>
+
+<div class="flow">
+
+  <div class="row">
+    <div class="spine">
+      <div class="box start">
+        <div class="h"><span class="n">01</span>打开 App</div>
+        <div class="d">界面立即出现，但什么都不改</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side"></div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box">
+        <div class="h"><span class="n">02</span>申请 Shizuku</div>
+        <div class="d">只申请授权，不碰任何系统设置</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side">
+      <div class="conn"></div>
+      <div style="display:flex;flex-direction:column;gap:7px;flex:1">
+        <div class="branch"><span class="dot2 g"></span>授权成功 → 分辨率可用</div>
+        <div class="branch"><span class="dot2 a"></span>未授权 → 跳过分辨率与导航<br><span class="sub2">方向控制仍可正常使用</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box accent">
+        <div class="h"><span class="n">03</span>选择屏幕分辨率</div>
+        <div class="d">原生 / 高清 / 4K 三选一</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side">
+      <div class="conn"></div>
+      <div class="branch" style="flex:1">未选择 → 启动按钮<span style="color:#4a4a54">灰色禁用</span></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box accent">
+        <div class="h"><span class="n">04</span>点「启动游戏」</div>
+        <div class="d">按钮变主色，开始执行</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side"></div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box">
+        <div class="h"><span class="n">05</span>挂方向控制悬浮窗</div>
+        <div class="d">1×1 透明窗口，写在最上层<br>失败自动重试 3 次</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side">
+      <div class="conn"></div>
+      <div style="display:flex;flex-direction:column;gap:7px;flex:1">
+        <div class="branch"><span class="dot2 g"></span>成功 → 继续下一步</div>
+        <div class="branch crit"><span class="dot2 r"></span>3 次全失败 → 弹窗「重试 / 取消」<br><span class="sub2">游戏不启动，屏幕未做任何改动</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box">
+        <div class="h"><span class="n">06</span>改分辨率 + 导航</div>
+        <div class="d">wm size / wm density / 三键导航<br>仅在 Shizuku 已授权时执行</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side">
+      <div class="conn"></div>
+      <div class="branch" style="flex:1">未授权 → 跳过，日志注明「无 Shizuku」</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box accent">
+        <div class="h"><span class="n">07</span>拉起鸣潮</div>
+        <div class="d">悬浮窗已就位后才启动</div>
+      </div>
+      <div class="arrow"></div>
+    </div>
+    <div class="side"></div>
+  </div>
+
+  <div class="row">
+    <div class="spine">
+      <div class="box end">
+        <div class="h"><span class="n">08</span>退出还原</div>
+        <div class="d">划掉启动器 / 点「还原显示」<br>移除悬浮窗 + 恢复分辨率、密度、导航</div>
+      </div>
+    </div>
+    <div class="side">
+      <div class="conn"></div>
+      <div class="branch" style="flex:1">进程被杀 → 下次打开自动补还原</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <span><i style="background:var(--accent)"></i>用户操作</span>
+  <span><i style="background:#3a3a46"></i>程序执行</span>
+  <span><i style="background:#2f5a3f"></i>退出阶段</span>
+  <span><i style="background:var(--red)"></i>失败分支</span>
+</div>
+
+</body>
+</html>

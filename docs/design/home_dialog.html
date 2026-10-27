@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --accent:#C24A34; --bg:#0E0E12; --card:#1a1a21; --line:#2b2b34;
+    --text:#F0EEEA; --dim:#8A8A93; --faint:#63636d;
+    --green:#4ADE80; --amber:#E8C46A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#131318; font-family:"Noto Sans CJK SC","PingFang SC",sans-serif;
+    display:flex; gap:44px; justify-content:center; align-items:flex-start;
+    padding:40px 20px;
+  }
+  .wrap{display:flex;flex-direction:column;align-items:center}
+  .phone{
+    width:352px;height:744px;background:var(--bg);
+    border-radius:30px;border:1px solid #2a2a31;overflow:hidden;
+    position:relative;display:flex;flex-direction:column;
+  }
+  .caption{color:#6b6b75;font-size:12px;margin-top:12px;letter-spacing:.4px}
+
+  /* 桌面背景（模糊示意） */
+  .desk{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(122,90,180,.30), transparent 45%),
+      radial-gradient(circle at 72% 62%, rgba(60,120,160,.26), transparent 50%),
+      linear-gradient(160deg,#1a1526,#0d1219 60%,#141018);
+    padding:56px 26px;
+  }
+  .desk .row{display:flex;gap:26px;margin-bottom:26px}
+  .app{width:52px;text-align:center}
+  .app .ic{
+    width:52px;height:52px;border-radius:14px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.09);
+  }
+  .app .nm{height:6px;width:36px;margin:7px auto 0;border-radius:3px;background:rgba(255,255,255,.13)}
+
+  .dim{position:absolute;inset:0;background:rgba(8,8,12,.62)}
+
+  /* 弹窗 */
+  .dlg{
+    position:absolute;left:18px;right:18px;top:50%;transform:translateY(-50%);
+    background:#1b1b22;border:1px solid #2f2f39;border-radius:20px;
+    padding:22px 20px 16px;
+    box-shadow:0 18px 48px rgba(0,0,0,.55);
+  }
+  .dlg .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:10.5px;color:#9FE8B0;background:rgba(74,222,128,.10);
+    border:1px solid rgba(74,222,128,.22);border-radius:6px;padding:3px 8px;
+    margin-bottom:12px;
+  }
+  .dlg .badge i{width:5px;height:5px;border-radius:50%;background:var(--green)}
+  .dlg h3{color:var(--text);font-size:16px;font-weight:700;margin-bottom:9px}
+  .dlg p{color:#8f8f99;font-size:12px;line-height:1.7}
+  .dlg .kv{
+    margin-top:13px;padding:11px 13px;background:#15151b;border:1px solid #262630;
+    border-radius:10px;display:flex;justify-content:space-between;align-items:center;
+  }
+  .dlg .kv .k{color:#6f6f7a;font-size:11.5px}
+  .dlg .kv .v{color:#E8C46A;font-size:12.5px;font-weight:600}
+  .dlg .note{color:#5f5f69;font-size:10.5px;margin-top:11px;line-height:1.6}
+
+  .acts{display:flex;gap:9px;margin-top:16px}
+  .acts div{flex:1;text-align:center;padding:13px;border-radius:12px;font-size:13.5px}
+  .keep{background:#25252d;color:#a8a8b2}
+  .restore{background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px}
+  .restore .cnt{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:19px;height:19px;border-radius:6px;
+    background:rgba(0,0,0,.26);font-size:11.5px;font-weight:700;
+  }
+
+  /* 第二屏：已还原 */
+  .toast{
+    position:absolute;left:24px;right:24px;bottom:56px;
+    background:rgba(26,26,33,.96);border:1px solid #2f3f34;border-radius:14px;
+    padding:14px 16px;display:flex;gap:11px;align-items:center;
+  }
+  .toast .ok{
+    width:22px;height:22px;border-radius:50%;flex:0 0 auto;
+    background:rgba(74,222,128,.15);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:12px;
+  }
+  .toast .tx{font-size:12px;color:#b6b6c0;line-height:1.6}
+  .toast .tx b{color:#4ADE80}
+</style>
+</head>
+<body>
+
+<!-- ① 弹窗 + 倒计时 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="desk">
+      <div class="row">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+      <div class="row">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+    </div>
+    <div class="dim"></div>
+
+    <div class="dlg">
+      <div class="badge"><i></i>鸣潮已转入后台</div>
+      <h3>是否还原分辨率？</h3>
+      <p>游戏仍在后台运行，未做任何改动。</p>
+
+      <div class="kv">
+        <span class="k">当前渲染分辨率</span>
+        <span class="v">3840 × 8400 · 3.0×</span>
+      </div>
+
+      <div class="acts">
+        <div class="keep">保持</div>
+        <div class="restore">还原<span class="cnt">5</span></div>
+      </div>
+
+      <div class="note">5 秒后自动还原，期间点「保持」则维持当前分辨率</div>
+    </div>
+  </div>
+  <div class="caption">① 按 Home 返回桌面 → 弹窗 + 5 秒倒计时</div>
+</div>
+
+<!-- ② 已还原 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="desk">
+      <div class="row">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+      <div class="row">
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+        <div class="app"><div class="ic"></div><div class="nm"></div></div>
+      </div>
+    </div>
+
+    <div class="toast">
+      <div class="ok">✓</div>
+      <div class="tx">已还原为 <b>1280 × 2800</b><br>鸣潮仍在后台，切回时自动恢复 3.0×</div>
+    </div>
+  </div>
+  <div class="caption">② 倒计时结束或点「还原」→ 立即还原</div>
+</div>
+
+</body>
+</html>

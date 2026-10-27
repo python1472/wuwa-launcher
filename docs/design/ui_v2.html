@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鸣潮启动器 · 新 UI</title>
+<style>
+  :root {
+    /* 主色：后期想换就改这一行 */
+    --accent: #C24A34;
+    --accent-soft: rgba(194, 74, 52, .14);
+    --bg: #0E0E12;
+    --card: #17171d;
+    --line: #24242c;
+    --text: #F0EEEA;
+    --dim: #8A8A93;
+    --faint: #63636d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #131318;
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    display: flex; gap: 34px; justify-content: center; align-items: flex-start;
+    padding: 36px 18px;
+  }
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+  .phone {
+    width: 344px; height: 720px; background: var(--bg);
+    border-radius: 30px; border: 1px solid #2a2a31; overflow: hidden;
+    display: flex; flex-direction: column; position: relative;
+  }
+  .caption { color: #6b6b75; font-size: 12px; margin-top: 11px; letter-spacing: .4px; }
+
+  /* 顶栏 */
+  .bar { padding: 24px 20px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .title { color: var(--text); font-size: 20px; font-weight: 600; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ADE80; }
+  .dot.warn { background: #E8C46A; }
+
+  .status {
+    margin: 0 20px 18px; padding: 10px 13px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 11px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .status .t { font-size: 12px; color: #9FE8B0; }
+  .status .t.warn { color: #E8C46A; }
+
+  /* 分区标题 */
+  .section-title {
+    margin: 0 20px 10px; font-size: 12px; color: var(--faint);
+    letter-spacing: .6px;
+  }
+
+  /* 分辨率选项 */
+  .options { margin: 0 20px 18px; display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    padding: 13px 15px; border-radius: 13px;
+    background: var(--card); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .opt .l { color: #D9D7D2; font-size: 14.5px; font-weight: 500; }
+  .opt .d { color: var(--faint); font-size: 11.5px; margin-top: 3px; }
+  .opt .r { color: var(--faint); font-size: 11px; }
+  .opt.on { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.on .l { color: #fff; }
+  .opt.on .r { color: var(--accent); }
+
+  /* 启动按钮 */
+  .launch {
+    margin: 0 20px; padding: 22px; border-radius: 16px;
+    text-align: center; font-size: 16.5px; font-weight: 600;
+  }
+  .launch.disabled { background: #1b1b21; color: #4a4a54; border: 1px solid #24242c; }
+  .launch.enabled { background: var(--accent); color: #fff; }
+  .launch.hint { font-size: 11px; font-weight: 400; color: #4a4a54; margin-top: 6px; }
+
+  /* 日志 */
+  .log {
+    flex: 1; margin: 16px 20px 0; padding: 11px;
+    background: #101015; border: 1px solid #1e1e26; border-radius: 11px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 10px; line-height: 1.8; color: #6f8f79; overflow: hidden;
+  }
+  .log .ok { color: #9FE8B0; }
+  .log .dim { color: #46554c; }
+
+  .foot { padding: 14px 20px 22px; }
+  .btn-sm {
+    text-align: center; padding: 12px; border-radius: 12px;
+    font-size: 12.5px; color: #8A8A93;
+    background: var(--card); border: 1px solid var(--line);
+  }
+
+  /* 弹窗 */
+  .mask {
+    position: absolute; inset: 0; background: rgba(0,0,0,.55);
+    display: flex; align-items: center; justify-content: center; padding: 28px;
+  }
+  .dialog {
+    width: 100%; background: #1a1a21; border: 1px solid #2b2b34;
+    border-radius: 18px; padding: 22px 20px 16px;
+  }
+  .dialog h3 { color: var(--text); font-size: 15.5px; margin-bottom: 8px; }
+  .dialog p { color: var(--faint); font-size: 12px; line-height: 1.65; }
+  .dialog .acts { margin-top: 18px; display: flex; gap: 9px; }
+  .dialog .acts div { flex: 1; text-align: center; padding: 12px; border-radius: 11px; font-size: 13px; }
+  .dialog .cancel { background: #232329; color: #9a9aa4; }
+  .dialog .retry { background: var(--accent); color: #fff; font-weight: 600; }
+
+  /* 二次确认里的提醒条 */
+  .warnbox {
+    margin-top: 14px; padding: 11px 12px;
+    background: rgba(232,196,106,.08); border: 1px solid #3d3527;
+    border-radius: 10px; display: flex; gap: 9px;
+  }
+  .warnbox .ic { color: #E8C46A; font-size: 13px; line-height: 1.4; }
+  .warnbox .tx { color: #b9a37a; font-size: 11.5px; line-height: 1.65; }
+  .warnbox .tx b { color: #E8C46A; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ① 未选择分辨率 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">4K（渲染分辨率）</div><div class="d">1792 × 3920</div></div><div class="r">—</div></div>
+    </div>
+
+    <div class="launch disabled">启动游戏<div class="hint">请先选择分辨率</div></div>
+    <div class="log"><div class="dim">等待选择…</div></div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+  </div>
+  <div class="caption">① 未选择 → 启动按钮灰色不可点</div>
+</div>
+
+<!-- ② 选中 4K -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">4K（渲染分辨率）</div><div class="d">1792 × 3920</div></div><div class="r">已选</div></div>
+    </div>
+
+    <div class="launch enabled">启动游戏</div>
+    <div class="log">
+      <div class="ok">方向控制已就绪</div>
+      <div>分辨率 1792×3920</div>
+      <div>密度 768</div>
+      <div class="dim">三键导航已切换</div>
+      <div class="ok">正在启动鸣潮…</div>
+    </div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+  </div>
+  <div class="caption">② 选中 4K → 按钮变主色，可点击</div>
+</div>
+
+<!-- ③ 失败弹窗 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot warn"></div></div>
+    <div class="status"><div class="dot warn" style="width:6px;height:6px"></div><div class="t warn">Shizuku 未授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt on"><div><div class="l">4K（渲染分辨率）</div><div class="d">1792 × 3920</div></div><div class="r">已选</div></div>
+    </div>
+
+    <div class="launch enabled">启动游戏</div>
+    <div class="log"><div>方向控制挂载失败 ×3</div><div class="dim">游戏未启动</div></div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+
+    <div class="mask">
+      <div class="dialog">
+        <h3>屏幕方向控制失败</h3>
+        <p>无法挂载悬浮窗，可能是没有「显示在其他应用上层」权限。<br>游戏未启动，屏幕未做任何改动。</p>
+        <div class="acts">
+          <div class="cancel">取消</div>
+          <div class="retry">重试</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="caption">③ 方向控制失败 → 弹窗，不启动游戏</div>
+</div>
+
+<!-- ④ 选择 4K 后的二次确认 -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar"><div class="title">鸣潮启动器</div><div class="dot"></div></div>
+    <div class="status"><div class="dot" style="width:6px;height:6px"></div><div class="t">Shizuku 已授权</div></div>
+
+    <div class="section-title">屏幕分辨率</div>
+    <div class="options">
+      <div class="opt"><div><div class="l">原生</div><div class="d">1080p · 2360 × 1080</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">高清</div><div class="d">屏幕分辨率 · 2800 × 1280</div></div><div class="r">—</div></div>
+      <div class="opt"><div><div class="l">4K（渲染分辨率）</div><div class="d">1792 × 3920</div></div><div class="r">—</div></div>
+    </div>
+
+    <div class="launch disabled">启动游戏<div class="hint">请先选择分辨率</div></div>
+    <div class="log"><div class="dim">等待选择…</div></div>
+    <div class="foot"><div class="btn-sm">还原显示</div></div>
+
+    <div class="mask">
+      <div class="dialog">
+        <h3>确认选择 4K 渲染分辨率？</h3>
+        <p>渲染分辨率将提升到 <b style="color:#E8C46A">1792 × 3920</b>，像素量为原生的 2.31 倍，画面更锐利，但发热与耗电会明显上升。</p>
+
+        <div class="warnbox">
+          <div class="ic">⚠</div>
+          <div class="tx">
+            该分辨率下<b>全面屏手势会失效</b>，将自动切换为<b>三键导航</b>。<br>
+            退出启动器时会恢复你原本的导航方式。
+          </div>
+        </div>
+
+        <div class="acts">
+          <div class="cancel">取消</div>
+          <div class="retry">确认 4K</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="caption">④ 点 4K → 二次确认，含导航方式提醒</div>
+</div>
+
+</body>
+</html>

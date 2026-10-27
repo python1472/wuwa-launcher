@@ -1,0 +1,23 @@
+# 构建中间产物
+build/
+
+# 签名密钥（不外发，见 README「关于签名」）
+signing/
+
+# 离线包太大（37.5MB），单独分发
+dist/*.tar.gz
+
+# 开发对话归档（44.5 万字，本地保留不公开）
+docs/archive/
+
+# 设计草稿
+docs/design/.trash/
+icon/**/*.part
+
+# 大体积构建依赖，用 tools/fetch_deps.sh 重新下载
+tools/android.jar
+tools/r8.jar
+tools/apksig.jar
+tools/platform34.zip
+tools/shizuku/
+tools/apksig_x/

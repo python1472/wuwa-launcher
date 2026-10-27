@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鸣潮启动器 UI 预览</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #17171b;
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    display: flex; gap: 40px; justify-content: center; align-items: flex-start;
+    padding: 40px 20px;
+  }
+  .phone {
+    width: 360px; height: 760px;
+    background: #0E0E12;
+    border-radius: 32px;
+    border: 1px solid #2a2a31;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .caption {
+    color: #6b6b75; font-size: 12px; text-align: center;
+    margin-top: 12px; letter-spacing: .5px;
+  }
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+
+  /* 顶栏 */
+  .bar {
+    padding: 26px 22px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .title { color: #F0EEEA; font-size: 21px; font-weight: 600; letter-spacing: .5px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ADE80; }
+  .dot.off { background: #E8C46A; }
+
+  /* 状态卡 */
+  .status {
+    margin: 0 22px 18px;
+    padding: 12px 14px;
+    background: #17171d;
+    border: 1px solid #24242c;
+    border-radius: 12px;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .status .t { font-size: 12.5px; color: #9FE8B0; }
+  .status .t.warn { color: #E8C46A; }
+
+  /* 信息行 */
+  .meta {
+    margin: 0 22px 22px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 11px; color: #8A8A93;
+    background: #1a1a20; border: 1px solid #26262e;
+    border-radius: 7px; padding: 4px 9px;
+  }
+
+  /* 主按钮区 */
+  .actions { padding: 0 22px; display: flex; flex-direction: column; gap: 12px; }
+  .btn-big {
+    border-radius: 16px; padding: 20px 18px;
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid transparent;
+  }
+  .btn-big.primary { background: #C24A34; }
+  .btn-big.ghost { background: #1b1b21; border-color: #2b2b34; }
+  .btn-big .icon { font-size: 20px; opacity: .92; }
+  .btn-big .label { color: #fff; font-size: 16px; font-weight: 600; }
+  .btn-big .sub { color: rgba(255,255,255,.62); font-size: 11.5px; margin-top: 3px; }
+  .btn-big.ghost .label { color: #D9D7D2; }
+  .btn-big.ghost .sub { color: #74747e; }
+
+  /* 日志 */
+  .log {
+    flex: 1; margin: 20px 22px 0;
+    background: #101015; border: 1px solid #1e1e26; border-radius: 12px;
+    padding: 12px; overflow: hidden;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 10.5px; line-height: 1.75; color: #6f8f79;
+  }
+  .log .ok { color: #9FE8B0; }
+  .log .dim { color: #4a5a50; }
+
+  /* 底部 */
+  .foot {
+    padding: 16px 22px 24px;
+    display: flex; gap: 10px;
+  }
+  .btn-sm {
+    flex: 1; text-align: center;
+    padding: 13px; border-radius: 12px;
+    font-size: 13px; color: #8A8A93;
+    background: #17171d; border: 1px solid #24242c;
+  }
+  .btn-sm.warn { color: #C97A6A; border-color: #33241f; }
+
+  /* 第二版：分段控制 */
+  .seg {
+    margin: 0 22px 18px; display: flex;
+    background: #1a1a20; border: 1px solid #26262e;
+    border-radius: 13px; padding: 4px;
+  }
+  .seg div {
+    flex: 1; text-align: center; padding: 11px 0;
+    font-size: 13.5px; color: #7d7d87; border-radius: 10px;
+  }
+  .seg div.on { background: #C24A34; color: #fff; font-weight: 600; }
+  .hint { margin: 0 22px 16px; font-size: 11.5px; color: #63636d; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ============ 版本 A：两个大按钮 ============ -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar">
+      <div class="title">鸣潮启动器</div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="status">
+      <div class="dot" style="width:6px;height:6px"></div>
+      <div class="t">Shizuku 已授权</div>
+    </div>
+
+    <div class="meta">
+      <div class="tag">1792×3920</div>
+      <div class="tag">密度 768</div>
+      <div class="tag">退出自动还原</div>
+    </div>
+
+    <div class="actions">
+      <div class="btn-big primary">
+        <div class="icon">⟳</div>
+        <div>
+          <div class="label">跟随重力</div>
+          <div class="sub">竖着拿竖屏，横过来横屏</div>
+        </div>
+      </div>
+      <div class="btn-big ghost">
+        <div class="icon">▯</div>
+        <div>
+          <div class="label">强制竖屏</div>
+          <div class="sub">始终竖直，不跟随手势</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="log">
+      <div class="dim">等待操作…</div>
+    </div>
+
+    <div class="foot">
+      <div class="btn-sm warn">还原显示</div>
+    </div>
+  </div>
+  <div class="caption">版本 A · 两个大按钮</div>
+</div>
+
+<!-- ============ 版本 B：分段控制 ============ -->
+<div class="wrap">
+  <div class="phone">
+    <div class="bar">
+      <div class="title">鸣潮启动器</div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="status">
+      <div class="dot" style="width:6px;height:6px"></div>
+      <div class="t">Shizuku 已授权</div>
+    </div>
+
+    <div class="hint">屏幕方向</div>
+    <div class="seg">
+      <div class="on">跟随重力</div>
+      <div>强制竖屏</div>
+    </div>
+
+    <div class="meta">
+      <div class="tag">1792×3920</div>
+      <div class="tag">密度 768</div>
+    </div>
+
+    <div class="actions">
+      <div class="btn-big primary" style="justify-content:center">
+        <div class="label" style="font-size:17px">启动鸣潮</div>
+      </div>
+    </div>
+
+    <div class="log">
+      <div class="dim">等待操作…</div>
+    </div>
+
+    <div class="foot">
+      <div class="btn-sm warn">还原显示</div>
+    </div>
+  </div>
+  <div class="caption">版本 B · 先选方向再启动</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --accent:#C24A34; --bg:#131318; --card:#1a1a21; --line:#2b2b34;
+    --text:#F0EEEA; --dim:#8A8A93; --faint:#63636d;
+    --green:#4ADE80; --amber:#E8C46A; --red:#E06A5A; --blue:#6AA6E8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); font-family:"Noto Sans CJK SC","PingFang SC","Noto Sans SC",sans-serif;
+    padding:36px 44px 48px; color:var(--text); width:1180px;
+  }
+  h1{font-size:21px;font-weight:700;margin-bottom:5px}
+  .sub{color:var(--faint);font-size:12px;margin-bottom:8px;letter-spacing:.3px}
+  h2{
+    font-size:13px;font-weight:700;color:var(--dim);letter-spacing:1px;
+    margin:30px 0 14px; padding-left:10px; border-left:3px solid var(--accent);
+  }
+
+  .row{display:flex;align-items:stretch}
+  .spine{width:340px;display:flex;flex-direction:column;align-items:center}
+  .side{flex:1;padding-left:10px;display:flex;align-items:center}
+
+  .box{
+    width:100%; background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px;
+  }
+  .box .h{font-size:14px;font-weight:700;color:#E8E6E2;display:flex;align-items:center;gap:8px}
+  .box .n{
+    font-size:10px;color:#8A8A93;border:1px solid #3a3a46;border-radius:5px;
+    padding:1px 6px;font-weight:500;flex:0 0 auto;
+  }
+  .box .d{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.65}
+  .box.user{border-color:var(--accent);background:rgba(194,74,52,.13)}
+  .box.user .h{color:#fff}
+  .box.start{border-color:#3f3f4d;background:#1d1d25}
+  .box.done{border-color:#2f5a3f;background:rgba(74,222,128,.08)}
+
+  .arrow{width:2px;height:20px;background:#33333d;position:relative}
+  .arrow::after{
+    content:"";position:absolute;bottom:-1px;left:-4px;
+    border-left:5px solid transparent;border-right:5px solid transparent;
+    border-top:7px solid #33333d;
+  }
+
+  .conn{width:24px;height:2px;background:#33333d;position:relative;flex:0 0 auto}
+  .conn::after{
+    content:"";position:absolute;right:-1px;top:-4px;
+    border-top:5px solid transparent;border-bottom:5px solid transparent;
+    border-left:7px solid #33333d;
+  }
+
+  .brs{display:flex;flex-direction:column;gap:7px;flex:1}
+  .br{
+    display:flex;gap:8px;align-items:flex-start;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:9px 12px;font-size:11.5px;color:#B9B9C2;line-height:1.55;
+  }
+  .br b{color:#E8E6E2;font-weight:600}
+  .br .d2{width:7px;height:7px;border-radius:50%;flex:0 0 auto;margin-top:4px}
+  .br.crit{border-color:#4a2f2a;background:rgba(224,106,90,.08)}
+  .g{background:var(--green)} .a{background:var(--amber)}
+  .r{background:var(--red)} .b{background:var(--blue)}
+  .muted{color:#5c5c66}
+
+  .legend{margin-top:26px;display:flex;gap:24px;font-size:11.5px;color:var(--faint)}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+
+<h1>鸣潮启动器 · 完整逻辑</h1>
+<div class="sub">左侧为主线步骤，右侧为该步骤的分支结果</div>
+
+<h2>主流程</h2>
+
+<div class="row">
+  <div class="spine">
+    <div class="box start">
+      <div class="h"><span class="n">01</span>打开 App</div>
+      <div class="d">界面立即出现，不修改任何系统设置</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side"></div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box">
+      <div class="h"><span class="n">02</span>申请 Shizuku 授权</div>
+      <div class="d">只申请，不改设置</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 g"></span><div><b>已授权</b> → 分辨率、密度、三键导航全部可用</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>未授权</b> → 跳过分辨率与导航<br><span class="muted">方向控制仍正常工作</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box user">
+      <div class="h"><span class="n">03</span>选择屏幕分辨率</div>
+      <div class="d">原生 · 高清 · 最大渲染极限</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 b"></span><div><b>原生</b> 1080p → 不改分辨率，只锁方向</div></div>
+      <div class="br"><span class="d2 b"></span><div><b>高清</b> 屏幕物理分辨率 → 直接选中</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>最大渲染极限</b> → 进入测试子流程<br><span class="muted">见下方「渲染档测试」</span></div></div>
+      <div class="br"><span class="d2 r"></span><div><b>未选择</b> → 启动按钮灰显，不可点击</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box user">
+      <div class="h"><span class="n">04</span>点「启动游戏」</div>
+      <div class="d">选定分辨率后按钮才变为主色</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side"></div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box">
+      <div class="h"><span class="n">05</span>挂方向控制悬浮窗</div>
+      <div class="d">1×1 透明窗口置于最上层<br>决定全屏方向，压住游戏自带的方向声明</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 g"></span><div><b>挂载成功</b> → 继续下一步</div></div>
+      <div class="br crit"><span class="d2 r"></span><div><b>失败自动重试 3 次</b></div></div>
+      <div class="br crit"><span class="d2 r"></span><div><b>3 次全失败</b> → 弹窗「重试 / 取消」<br><span class="muted">游戏不启动，屏幕未做任何改动</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box">
+      <div class="h"><span class="n">06</span>改分辨率 + 密度 + 导航</div>
+      <div class="d">仅 Shizuku 已授权时执行<br>密度按相同倍数变化，界面元素大小不变</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 b"></span><div><b>原生档</b> → 跳过尺寸，仅设方向</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>高倍率档</b> → 强制切换三键导航<br><span class="muted">高分辨率下全面屏手势区域失效</span></div></div>
+      <div class="br"><span class="d2 a"></span><div><b>未授权</b> → 本步整体跳过，日志注明</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box user">
+      <div class="h"><span class="n">07</span>拉起鸣潮</div>
+      <div class="d">悬浮窗就位、设置生效后才启动</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side"></div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box done">
+      <div class="h"><span class="n">08</span>退出还原</div>
+      <div class="d">移除悬浮窗 · 恢复分辨率、密度、导航<br>按进入前的快照还原，非固定默认值</div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 g"></span><div><b>点「还原显示」</b> → 立即还原</div></div>
+      <div class="br"><span class="d2 g"></span><div><b>从最近任务划掉</b> → 前台服务自动还原</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>进程被系统杀死</b> → 下次打开自动补还原</div></div>
+    </div>
+  </div>
+</div>
+
+<h2>渲染档测试（选「最大渲染极限」后进入）</h2>
+
+<div class="row">
+  <div class="spine">
+    <div class="box user">
+      <div class="h"><span class="n">T1</span>展开四档</div>
+      <div class="d">1.4× / 1.6× / 1.8× / 2.0×<br>按屏幕物理分辨率与密度实时计算</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 g"></span><div><b>1.4×</b> → 稳妥</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>1.6×</b> → 有风险</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>1.8×</b> → 风险高</div></div>
+      <div class="br"><span class="d2 r"></span><div><b>2.0×</b> → 极易崩溃</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box user">
+      <div class="h"><span class="n">T2</span>点选一档 → 进入测试</div>
+      <div class="d">立即应用该分辨率，开始 10 秒倒计时</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="br"><b>测试目的</b>：确认该分辨率下触摸是否正常</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box">
+      <div class="h"><span class="n">T3</span>10 秒测试中</div>
+      <div class="d">全屏遮罩 · 圆环倒计时<br>屏幕显示滑动轨迹（长度短于屏宽，不遮挡内容）</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 b"></span><div><b>滑动屏幕</b> → 显示轨迹，判断是否跟手</div></div>
+      <div class="br"><span class="d2 b"></span><div><b>点「确认无误」</b> → 弹二次确认</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>什么都不做</b> → 10 秒后自动结束</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box">
+      <div class="h"><span class="n">T4</span>二次确认</div>
+      <div class="d">说明所选档位与风险提示</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="brs">
+      <div class="br"><span class="d2 g"></span><div><b>确认无误</b> → 提前结束测试</div></div>
+      <div class="br"><span class="d2 a"></span><div><b>继续测满 10 秒</b> → 回到倒计时</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box done">
+      <div class="h"><span class="n">T5</span>结束测试 → 还原屏幕</div>
+      <div class="d">无论通过或超时，都会先恢复到进入测试前的状态</div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+  <div class="side"></div>
+</div>
+
+<div class="row">
+  <div class="spine">
+    <div class="box done">
+      <div class="h"><span class="n">T6</span>标记并选定</div>
+      <div class="d">通过的档位显示「✓ 可用」并自动选中<br>启动按钮由灰变为主色</div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="conn"></div>
+    <div class="br"><b>回到主流程 04</b>：等待点击「启动游戏」</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i style="background:var(--accent)"></i>用户操作</span>
+  <span><i style="background:#3f3f4d"></i>程序执行</span>
+  <span><i style="background:#2f5a3f"></i>完成 / 还原</span>
+  <span><i style="background:var(--red)"></i>失败分支</span>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#131318; --text:#F0EEEA; --dim:#8A8A93; --faint:#5f5f69;
+    --accent:#C24A34; --green:#4ADE80; --amber:#E8C46A; --red:#E06A5A;
+    --line:#33333d; --card:#1a1a21; --border:#2b2b34;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Noto Sans CJK SC","PingFang SC",sans-serif;
+    padding:40px 48px 56px; width:1240px;
+  }
+  h1{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:.5px}
+  .sub{color:var(--faint);font-size:12px;margin-bottom:28px}
+
+  /* 根 */
+  .root{
+    display:inline-block;padding:13px 22px;border-radius:12px;
+    background:linear-gradient(135deg,rgba(194,74,52,.22),rgba(194,74,52,.08));
+    border:1px solid rgba(194,74,52,.55);
+    font-size:15.5px;font-weight:800;letter-spacing:.5px;
+    margin-bottom:4px;
+  }
+
+  .tree ul{
+    list-style:none;padding-left:26px;position:relative;
+    margin-top:0;
+  }
+  .tree > ul{padding-left:14px}
+  .tree ul::before{
+    content:"";position:absolute;left:0;top:0;bottom:14px;
+    border-left:1px solid var(--line);
+  }
+  .tree li{
+    position:relative;padding:4px 0;
+  }
+  .tree li::before{
+    content:"";position:absolute;left:-26px;top:19px;width:22px;
+    border-top:1px solid var(--line);
+  }
+  .tree > ul > li::before{left:-14px;width:10px}
+
+  /* 节点 */
+  .n{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 13px;border-radius:9px;
+    background:var(--card);border:1px solid var(--border);
+    font-size:12.5px;color:#D5D3CE;line-height:1.5;
+  }
+  .n .t{font-weight:700;color:#F0EEEA}
+  .n .d{color:var(--faint);font-size:11px}
+  .n .tag{
+    font-size:9.5px;padding:2px 6px;border-radius:5px;font-weight:600;
+    flex:0 0 auto;
+  }
+  .n.act{border-color:rgba(194,74,52,.6);background:rgba(194,74,52,.12)}
+  .n.act .t{color:#fff}
+  .n.ok{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.08)}
+  .n.warn{border-color:rgba(232,196,106,.4);background:rgba(232,196,106,.08)}
+  .n.bad{border-color:rgba(224,106,90,.45);background:rgba(224,106,90,.1)}
+  .n.done{border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.12)}
+
+  .tag.g{color:#9FE8B0;background:rgba(74,222,128,.14)}
+  .tag.a{color:#E8C46A;background:rgba(232,196,106,.14)}
+  .tag.r{color:#E06A5A;background:rgba(224,106,90,.16)}
+  .tag.b{color:#8A8A93;background:rgba(255,255,255,.06)}
+
+  /* 分支标签 */
+  .k{
+    font-size:10px;color:var(--faint);letter-spacing:.5px;
+    margin-left:2px;
+  }
+  .sep{
+    height:1px;background:var(--line);margin:22px 0 18px;opacity:.6;
+  }
+  .foot{
+    margin-top:26px;font-size:11px;color:var(--faint);line-height:1.8;
+  }
+  .foot b{color:var(--dim)}
+</style>
+</head>
+<body>
+
+<h1>鸣潮启动器 · 完整逻辑树</h1>
+<div class="sub">当前设计状态 · 尚未编译</div>
+
+<div class="root">鸣潮启动器</div>
+
+<div class="tree">
+<ul>
+  <li>
+    <div class="n act"><span class="t">① 启动阶段</span><span class="d">打开 App 后</span></div>
+    <ul>
+      <li>
+        <div class="n"><span class="t">打开界面</span><span class="d">不修改任何系统设置</span></div>
+        <ul>
+          <li>
+            <div class="n"><span class="t">申请 Shizuku 授权</span><span class="d">仅申请，不执行操作</span></div>
+            <ul>
+              <li><div class="n ok"><span class="t">已授权</span><span class="d">分辨率 · 密度 · 三键导航全部可用</span></div></li>
+              <li><div class="n warn"><span class="t">未授权 / 未运行</span><span class="d">跳过分辨率与导航，方向控制仍可用</span></div></li>
+            </ul>
+          </li>
+          <li>
+            <div class="n act"><span class="t">选择屏幕分辨率</span><span class="d">三选一</span></div>
+            <ul>
+              <li><div class="n"><span class="t">原生</span><span class="d">1080p · 2360 × 1080</span><span class="tag b">不改尺寸</span></div></li>
+              <li><div class="n"><span class="t">高清</span><span class="d">屏幕物理分辨率 · 2800 × 1280</span><span class="tag b">直接选中</span></div></li>
+              <li>
+                <div class="n act"><span class="t">最大渲染极限</span><span class="d">按屏幕自动计算 · 展开四档</span></div>
+                <ul>
+                  <li><div class="n ok"><span class="t">1.4×</span><span class="d">1792 × 3920 · 784dpi</span><span class="tag g">稳妥</span></div></li>
+                  <li><div class="n warn"><span class="t">1.6×</span><span class="d">2048 × 4480 · 896dpi</span><span class="tag a">有风险</span></div></li>
+                  <li><div class="n warn"><span class="t">1.8×</span><span class="d">2304 × 5040 · 1008dpi</span><span class="tag a">风险高</span></div></li>
+                  <li><div class="n bad"><span class="t">2.0×</span><span class="d">2560 × 5600 · 1120dpi</span><span class="tag r">极易崩溃</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div class="n"><span class="t">启动按钮状态</span></div>
+            <ul>
+              <li><div class="n"><span class="t">未选择</span><span class="d">灰色 · 不可点击</span></div></li>
+              <li><div class="n ok"><span class="t">已选择</span><span class="d">变为主色 · 可点击</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <div class="n act"><span class="t">② 渲染档测试</span><span class="d">仅「最大渲染极限」路径</span></div>
+    <ul>
+      <li>
+        <div class="n"><span class="t">点选任一档位</span><span class="d">立即应用该分辨率 + 同比例密度</span></div>
+        <ul>
+          <li>
+            <div class="n"><span class="t">10 秒倒计时开始</span><span class="d">全屏遮罩 · 圆环计数</span></div>
+            <ul>
+              <li><div class="n"><span class="t">滑动屏幕</span><span class="d">显示轨迹（长度短于屏宽，避免杂乱）</span></div></li>
+              <li>
+                <div class="n"><span class="t">点「确认无误」</span><span class="d">提前结束入口</span></div>
+                <ul>
+                  <li>
+                    <div class="n"><span class="t">二次确认弹窗</span><span class="d">显示所选档位 + 风险提示</span></div>
+                    <ul>
+                      <li><div class="n ok"><span class="t">确认无误</span><span class="d">提前结束测试</span></div></li>
+                      <li><div class="n"><span class="t">继续测满 10 秒</span><span class="d">回到倒计时</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><div class="n"><span class="t">超时</span><span class="d">10 秒走完自动结束</span></div></li>
+            </ul>
+          </li>
+          <li><div class="n done"><span class="t">结束 → 还原屏幕</span><span class="d">恢复测试前的分辨率与密度</span></div></li>
+          <li><div class="n done"><span class="t">标记「✓ 可用」并选定</span><span class="d">回到主流程等待启动</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <div class="n act"><span class="t">③ 启动执行</span><span class="d">点「启动游戏」后</span></div>
+    <ul>
+      <li>
+        <div class="n"><span class="t">挂方向控制悬浮窗</span><span class="d">1×1 透明窗口 · 置于最上层</span></div>
+        <ul>
+          <li><div class="n ok"><span class="t">挂载成功</span><span class="d">继续下一步</span></div></li>
+          <li><div class="n warn"><span class="t">失败 → 自动重试</span><span class="d">最多 3 次</span></div></li>
+          <li>
+            <div class="n bad"><span class="t">3 次全失败</span><span class="d">弹窗：重试 / 取消</span></div>
+            <ul>
+              <li><div class="n bad"><span class="t">游戏不启动</span><span class="d">屏幕未做任何改动</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div class="n"><span class="t">修改分辨率 + 密度 + 导航</span><span class="d">仅 Shizuku 已授权时执行</span></div>
+        <ul>
+          <li><div class="n"><span class="t">原生档</span><span class="d">跳过尺寸，仅锁方向</span></div></li>
+          <li><div class="n warn"><span class="t">高倍率档</span><span class="d">强制切三键导航（高分辨率下手势区失效）</span></div></li>
+          <li><div class="n warn"><span class="t">未授权</span><span class="d">本步整体跳过，日志注明</span></div></li>
+        </ul>
+      </li>
+      <li><div class="n act"><span class="t">拉起鸣潮</span><span class="d">窗口就位、设置生效后才启动</span></div></li>
+    </ul>
+  </li>
+
+  <li>
+    <div class="n act"><span class="t">④ 游戏运行中</span><span class="d">检测与提示</span></div>
+    <ul>
+      <li>
+        <div class="n"><span class="t">按 Home 返回桌面</span><span class="d">鸣潮留在后台不动</span></div>
+        <ul>
+          <li>
+            <div class="n act"><span class="t">弹出三选项询问框</span><span class="d">游戏留在后台，不关闭</span></div>
+            <ul>
+              <li><div class="n ok"><span class="t">① 还原并回到桌面</span><span class="d">5 秒倒计时默认项</span></div></li>
+              <li><div class="n"><span class="t">② 保持并回到游戏</span><span class="d">分辨率不变，直接切回鸣潮</span></div></li>
+              <li><div class="n"><span class="t">③ 保持并回到桌面</span><span class="d">分辨率不变，留在桌面</span></div></li>
+            </ul>
+          </li>
+          <li><div class="n warn"><span class="t">还原后切回游戏</span><span class="d">是否自动恢复高分辨率 → 待定</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <div class="n done"><span class="t">⑤ 退出还原</span><span class="d">按进入前快照恢复，非固定默认值</span></div>
+    <ul>
+      <li><div class="n done"><span class="t">点「还原显示」</span><span class="d">立即还原</span></div></li>
+      <li><div class="n done"><span class="t">从最近任务划掉</span><span class="d">前台服务触发还原</span></div></li>
+      <li><div class="n warn"><span class="t">进程被系统杀死</span><span class="d">下次打开时自动补还原</span></div></li>
+      <li><div class="n"><span class="t">还原内容</span><span class="d">移除悬浮窗 · 分辨率 · 密度 · 导航</span></div></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<div class="sep"></div>
+
+<div class="foot">
+  <b>待定项：</b>3.0× 实验档是否开放（需可靠看门狗）　·　鸣潮永不主动关闭，由用户自行移除<br>
+  <b>技术依赖：</b>Shizuku（分辨率/密度/导航/进程检测）· 悬浮窗权限（方向控制与 Home 弹窗）
+</div>
+
+</body>
+</html>
